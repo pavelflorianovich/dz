@@ -1,0 +1,7 @@
+pavel: 0
+pavel: 3
+Pavel: 38
+sfsf: [34, 22]
+ert: [2, 4]
+fg: [0, 0]
+fdfd: [15, 17]
