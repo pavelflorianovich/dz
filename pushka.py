@@ -6,18 +6,18 @@ from tkinter import *
 root = Tk()
 fr = Frame(root)
 root.geometry('800x600')
-canvas = Canvas(root, bg='white')
+canvas = Canvas(root, bg='blue')
 canvas.pack(fill=BOTH, expand=1)
-
-
+canvas.create_line(0, 520, 800, 520, width=7)
 class Ball:
-    def __init__(self, x=40, y=450):
+    
+    def __init__(self, x = 40, y = 450):
         self.x = x
         self.y = y
         self.r = 10
         self.vx = 0
         self.vy = 0
-        self.color = choice(['blue', 'green', 'red', 'brown'])
+        self.color = choice(['white', 'green', 'red', 'brown'])
         self.id = canvas.create_oval(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r, fill=self.color)
         self.live = 30
 
@@ -30,6 +30,7 @@ class Ball:
             self.y -= self.vy
             self.x += self.vx
             self.vx *= 0.99
+            self.vy *= 0.99
             self.set_coords()
         else:
             if self.vx ** 2 + self.vy ** 2 > 10:
@@ -44,6 +45,9 @@ class Ball:
         if self.x > 780:
             self.vx = -self.vx / 2
             self.x = 779
+        if self.x < 0:
+            self.vx = -self.vx / 2
+            self.x = 1
 
     def hit_test(self, ob):
         return abs(ob.x - self.x) <= (self.r + ob.r) and abs(ob.y - self.y) <= (self.r + ob.r)
@@ -54,7 +58,9 @@ class Gun:
         self.f2_power = 10
         self.f2_on = 0
         self.an = 1
-        self.id = canvas.create_line(20, 450, 50, 420, width=7)
+        x = 40
+        y = 450
+        self.id = canvas.create_line(x - 20, y, x + 10, y - 30, width=7) # x - 20, y, x + 10, y - 30, width=7
 
     def fire2_start(self, event):
         self.f2_on = 1
@@ -65,22 +71,27 @@ class Gun:
         new_ball = Ball()
         new_ball.r += 5
         self.an = math.atan((event.y - new_ball.y) / (event.x - new_ball.x))
-        new_ball.vx = self.f2_power * math.cos(self.an)
-        new_ball.vy = -self.f2_power * math.sin(self.an)
+        if event.x > new_ball.x:
+            new_ball.vx = self.f2_power * math.cos(self.an)
+            new_ball.vy = -self.f2_power * math.sin(self.an)
+        else:
+            new_ball.vx = self.f2_power * math.cos(self.an + math.pi)
+            new_ball.vy = -self.f2_power * math.sin(self.an + math.pi)
         balls += [new_ball]
         self.f2_on = 0
         self.f2_power = 10
 
     def targetting(self, event=0):
+        x = 40
+        y = 450
         if event:
-            self.an = math.atan((event.y - 450) / (event.x - 20))
+            self.an = math.atan((event.y - y) / (event.x - x + 20))
         if self.f2_on:
             canvas.itemconfig(self.id, fill='orange')
         else:
             canvas.itemconfig(self.id, fill='black')
-        canvas.coords(self.id, 20, 450, 20 + max(self.f2_power, 20) * math.cos(self.an),
-                      450 + max(self.f2_power, 20) * math.sin(self.an))
-
+        canvas.coords(self.id, x - 20, y, x - 20 + max(self.f2_power, 20) * math.cos(self.an),
+                      y + max(self.f2_power, 20) * math.sin(self.an))    
     def power_up(self):
         if self.f2_on:
             if self.f2_power < 100:
@@ -99,8 +110,8 @@ class Target:
         self.live = 1
 
     def new_target(self):
-        x = self.x = rnd(600, 780)
-        y = self.y = rnd(300, 550)
+        x = self.x = rnd(20, 780)
+        y = self.y = rnd(0, 500)
         r = self.r = rnd(2, 50)
         color = self.color = 'red'
         canvas.coords(self.id, x - r, y - r, x + r, y + r)
@@ -150,5 +161,5 @@ def new_game(event=''):
 
 new_game()
 mainloop()
-1
-Downloading1
+
+
