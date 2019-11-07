@@ -9,9 +9,10 @@ root.geometry('800x600')
 canvas = Canvas(root, bg='blue')
 canvas.pack(fill=BOTH, expand=1)
 canvas.create_line(0, 520, 800, 520, width=7)
+
+
 class Ball:
-    
-    def __init__(self, x = 40, y = 450):
+    def __init__(self, x=40, y=450):
         self.x = x
         self.y = y
         self.r = 10
@@ -60,7 +61,7 @@ class Gun:
         self.an = 1
         x = 40
         y = 450
-        self.id = canvas.create_line(x - 20, y, x + 10, y - 30, width=7) # x - 20, y, x + 10, y - 30, width=7
+        self.id = canvas.create_line(x - 20, y, x + 10, y - 30, width=7)
 
     def fire2_start(self, event):
         self.f2_on = 1
@@ -91,7 +92,8 @@ class Gun:
         else:
             canvas.itemconfig(self.id, fill='black')
         canvas.coords(self.id, x - 20, y, x - 20 + max(self.f2_power, 20) * math.cos(self.an),
-                      y + max(self.f2_power, 20) * math.sin(self.an))    
+                      y + max(self.f2_power, 20) * math.sin(self.an))
+
     def power_up(self):
         if self.f2_on:
             if self.f2_power < 100:
@@ -161,5 +163,3 @@ def new_game(event=''):
 
 new_game()
 mainloop()
-
-
